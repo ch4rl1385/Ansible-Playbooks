@@ -1,0 +1,21 @@
+---
+- name: Generando archivo reporte
+  hosts: dev
+  become: true
+  tasks:
+    - name: Creando archivo en cada uno de los nodos
+      ansible.builtin.get_url:
+        url: http://192.168.23.10:8080
+        dest: /home/student/hwreport.empty
+        mode: 0644
+    
+    - name: Escribiendo los datos en ese fichero descargado
+      ansible.builtin.copy:
+        dest: /home/student/hwreport.empty
+        content: |
+          inventory_hostname: {{ inventory_hostname }}
+          memtotal_mb: {{ ansible_facts['memtotal_mb'] }}
+          ansible_bios_version: {{ ansible_bios_version }}
+          vda_size: {{ ansible_facts['devices']['vda']['size'] | default('NONE') }}
+          vdb_size: {{ ansible_facts['devices']['vdb']['size'] | default('NONE') }}
+
