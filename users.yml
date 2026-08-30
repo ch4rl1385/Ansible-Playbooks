@@ -5,7 +5,9 @@
   vars:
     users:
       - username: joe
+        userpass: passjoe
       - username: sam
+        userpass: passsam
   tasks:
     - name: Creando los usuarios joe y sam.
       ansible.builtin.user:
