@@ -1,6 +1,6 @@
 ---
 - name: Create users 
-  hosts: all
+  hosts: webservers
   become: true
   vars_files:
     - user_list.yml
@@ -11,7 +11,27 @@
     - name: Creando los usuarios dev.
       ansible.builtin.user:
         name: "{{ item['name'] }}"
-        password: "{{ dev_pass | password_hash('sha512') }}"
+#       password: "{{ (dev_passwd if 'dev' is group_names else prod_pass )  | ansible.builtin.password_hash('sha512') }}"
+        password: "{{ dev_pass | ansible.builtin.password_hash('sha512') }}"
+        uid: "{{ item['uid'] }}"
+        password_expire_max: "{{ item['password_expire_max'] }}"
+        groups:
+          - wheel
+        append: true
         state: present
       loop: "{{ users }}"
-      when: "'dev' in group_names and item['job']  == 'manager'" 
+      when: "'dev' in group_names and item['job']  == 'developer'"
+
+    - name: Creando los usuarios prod.
+      ansible.builtin.user:
+        name: "{{ item['name'] }}"
+#       password: "{{ (dev_passwd if 'dev' is group_names else prod_pass )  | ansible.builtin.password_hash('sha512') }}"
+        password: "{{ dev_pass | ansible.builtin.password_hash('sha512') }}"
+        uid: "{{ item['uid'] }}"
+        password_expire_max: "{{ item['password_expire_max'] }}"
+        groups:
+          - wheel
+        append: true
+        state: present
+      loop: "{{ users }}"
+      when: "'prod' in group_names and item['job']  == 'manager'"
