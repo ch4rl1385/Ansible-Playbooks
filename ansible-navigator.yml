@@ -1,0 +1,13 @@
+---
+ansible-navigator:
+  execution-environment:
+    container-engine: podman
+    enabled: true
+    image: "registry.redhat.io/ansible-automation-platform-25/ansible-dev-tools-rhel8:latest"
+    pull:
+      policy: missing
+      arguments:
+        - "--tls-verify=false"
+  mode: stdout
+  playbook-artifact:
+    enable: false
