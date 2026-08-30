@@ -1,16 +1,17 @@
 ---
 - name: Create users 
-  hosts: dev
+  hosts: all
   become: true
-  vars:
-    users:
-      - username: joe
-        userpass: passjoe
-      - username: sam
-        userpass: passsam
+  vars_files:
+    - user_list.yml
+    - vars/secrets.yml
+  
   tasks:
-    - name: Creando los usuarios joe y sam.
+    
+    - name: Creando los usuarios dev.
       ansible.builtin.user:
-        name: "{{ item['username'] }}"
+        name: "{{ item['name'] }}"
+        password: "{{ dev_pass | password_hash('sha512') }}"
         state: present
       loop: "{{ users }}"
+      when: "'dev' in group_names and item['job']  == 'manager'" 
