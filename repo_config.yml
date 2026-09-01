@@ -1,0 +1,21 @@
+---
+- name: Configure Repo
+  hosts: dev
+  become: true
+  vars:
+    gpg_key_url: "https://centos.org"
+  tasks:
+    - name: Importando la GPG Key
+      ansible.builtin.rpm_key:
+        key: "{{ gpg_key_url }}"
+        state: present
+
+    - name: Add multiple repositories into the same file (2/2)
+      ansible.builtin.yum_repository:
+        name: BaseOS
+        description: BaseOS Description
+        file: BaseOS
+        baseurl: http://conten.example.com/rhel9.6/x86_64/dvd/BaseOS
+        gpgkey: "{{ gpg_key_url }}"
+        gpgcheck: true
+        enabled: true

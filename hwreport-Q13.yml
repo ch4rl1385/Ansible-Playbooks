@@ -18,4 +18,3 @@
           ansible_bios_version: {{ ansible_bios_version }}
           vda_size: {{ ansible_facts['devices']['vda']['size'] | default('NONE') }}
           vdb_size: {{ ansible_facts['devices']['vdb']['size'] | default('NONE') }}
-
