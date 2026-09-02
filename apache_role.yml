@@ -1,0 +1,13 @@
+---
+# Este play hace un llamado al role apache que creamos offline con el "ansible-galaxy init roles/apache"
+- name: Aplicar el rol apache a los servidores del grupo dev
+  hosts: dev
+  become: true
+
+  roles:
+    - apache
+
+  #tasks:
+  #  - name: Incluyendo el rol apache
+  #    ansible.builtin.include_role:
+  #      name: apache

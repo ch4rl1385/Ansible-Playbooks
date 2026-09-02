@@ -1,0 +1,27 @@
+---
+# tasks file for roles/apache
+- name: Instalar el paquete apache
+  ansible.builtin.dnf:
+    name: httpd
+    state: present
+
+- name: Configurar la pagina desde la plnatilla
+  ansible.builtin.template:
+    src: templates/template.j2
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Asegurandome que el servicio este iniciado y activo permanente
+  ansible.builtin.systemd_service:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: Dar permisos selinux al servicio
+  ansible.posix.firewalld:
+    service: http
+    state: enabled
+    permanent: true
+    immediate: true
