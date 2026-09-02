@@ -1,0 +1,32 @@
+---
+# PLAY 1: Tarea 1 (Instalar vsftpd y mariadb-server en dev y test)
+- name: Instalar paquetes en grupos dev y test
+  hosts: dev,test       # <-- Apunta directamente a ambos grupos separados por coma
+  become: true
+  tasks:
+    - name: Instalar vsftpd y mariadb-server
+      ansible.builtin.dnf:
+        name:
+          - vsftpd
+          - mariadb-server
+        state: present
+
+# PLAY 2: Tarea 2 (Instalar el paquete de grupo en prod)
+- name: Instalar herramientas de desarrollo en prod
+  hosts: prod           # <-- Play separado para el grupo prod
+  become: true
+  tasks:
+    - name: Instalar RPM Development Tools
+      ansible.builtin.dnf:
+        name: "@RPM Development Tools" # El arroba (@) indica que es un paquete de grupo
+        state: present
+
+# PLAY 3: Tarea 3 (Actualizar todos los paquetes en dev)
+- name: Actualizar todos los paquetes en el grupo dev
+  hosts: dev            # <-- Play separado para el grupo dev
+  become: true
+  tasks:
+    - name: Actualizar el sistema completo
+      ansible.builtin.dnf:
+        name: "*"       # El asterisco (*) significa todos los paquetes
+        state: latest   # 'latest' asegura que se actualicen a la última versión
