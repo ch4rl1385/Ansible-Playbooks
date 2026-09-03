@@ -1,0 +1,35 @@
+---
+- name: Create a cron job for users
+  hosts: dev
+  become: true
+  
+  tasks:
+    - name: Creando cron job student every 2 minutes
+      ansible.builtin.cron:
+        name: "Logger Exam for student"
+        minute: "*/2"
+        hour: "*"
+        user: student
+        job: "logger EXAM294 in progress"
+        state: present
+
+    - name: Creando cron job student a las 5 minutes
+      ansible.builtin.cron:
+        name: "Logger Exam for student 5 hours"
+        minute: "0"
+        hour: "5"
+        user: student
+        job: "logger 294 in progress"
+        state: present
+
+#    - name: Crear una tarea cron para el examen
+#      ansible.builtin.cron:
+#        name: "Descripcion de la tarea"       # <- Nombre único (obligatorio para identificarla)
+#        minute: "0"                           # <- Minuto (0-59 o * / para cada hora pon "0")
+#        hour: "2"                             # <- Hora (0-23 o *)
+#        day: "*"                              # <- Día del mes (1-31 o *)
+#        month: "*"                            # <- Mes (1-12 o *)
+#        weekday: "*"                          # <- Día de la semana (0-6, donde 0 es domingo, o *)
+#        user: "root"                          # <- Usuario que ejecutará la tarea (por defecto root)
+#        job: "/usr/bin/tar -czf /backup.tar.gz /var/log" # <- El comando exacto a ejecutar
+#        state: present                        # <- Asegura que la tarea se cree
