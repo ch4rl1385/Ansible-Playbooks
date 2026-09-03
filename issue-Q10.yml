@@ -1,0 +1,40 @@
+---
+#- name: Replace file /etc/issue on all nodes
+#  hosts: all
+#  become: true
+
+#  tasks:
+#   - name: Replace file issue in dev group
+#     ansible.builtin.copy:
+#       dest: /etc/issue
+#       content: |
+#         Development
+#       owner: root
+#       group: root
+#       mode: '0644'
+#     when: " 'dev' in group_names "
+# ================================================================================#
+- name: Replace file /etc/issue on all nodes
+  hosts: all
+  become: true
+
+  vars:
+    # Definimos el contenido dinámico según el grupo del host
+    issue_content: |
+      {% if 'dev' in group_names %}
+      Development
+      {% elif 'test' in group_names %}
+      Testing
+      {% else %}
+      Production
+      {% endif %}
+
+  tasks:
+    # Una sola tarea se encarga de todos los nodos de forma dinámica
+    - name: Replace file /etc/issue with group specific content
+      ansible.builtin.copy:
+        dest: /etc/issue
+        content: "{{ issue_content }}"
+        owner: root
+        group: root
+        mode: '0644'

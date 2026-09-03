@@ -1,0 +1,14 @@
+---
+- name: Create /etc/myhost from myhosts.j2 file
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Usando la plantilla j2 descargada
+      ansible.builtin.template:
+        src: templates/myhosts.j2
+        dest: /tmp/myhosts.txt
+        owner: root
+        group: root
+        mode: '0644'
