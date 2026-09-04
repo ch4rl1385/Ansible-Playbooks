@@ -1,0 +1,10 @@
+---
+- name: Configure timesync RHEL
+  hosts: dev
+  become: true
+  vars:
+    timesync_ntp_servers:
+      - hostname: classroom.example.com
+        iburst: true
+  roles:
+    - timesync
