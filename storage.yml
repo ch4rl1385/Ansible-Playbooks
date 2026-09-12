@@ -1,0 +1,24 @@
+---
+- name: Crear lvm en el server de test
+  hosts: dev
+  become: true
+  collections:
+    - redhat.rhel_system_roles
+
+  tasks:
+    - name: Incluir el role storage de rhel
+      ansible.builtin.include_role:
+        name: storage
+      vars:
+        storage_pools:
+          - name: vg_rhce
+            disks:
+              - /dev/nvme0n2
+#           extent_size: 8 MiB  # <--- ¡Añade esto aquí para cambiar el PE size!
+
+            volumes:
+              - name: lv_exam
+                size: 2 GiB
+                fs_type: xfs
+                mount_point: /mnt/examen_rhce
+                state: present
