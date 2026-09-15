@@ -11,6 +11,7 @@
         owner: sally
         group: apache
         mode: '2775'
+ #       setype: httpd_sys_content_t
         
     - name: Creando link simbolico
       ansible.builtin.file:
@@ -26,16 +27,16 @@
         group: apache
         mode: '0644'
         
-   # 👇 NUEVA TAREA 1: Registrar el contexto web en la base de datos de SELinux
-    - name: Configurar contexto de SELinux para la carpeta
-      community.general.sefcontext:
-        target: '/webtest(/.*)?'
-        setype: httpd_sys_content_t
-        state: present
-
-    # 👇 NUEVA TAREA 2: Aplicar el cambio de SELinux en el disco duro de inmediato
-    - name: Aplicar los cambios de SELinux a los archivos existentes
-      ansible.builtin.command: restorecon -Rv /webtest
+#   # 👇 NUEVA TAREA 1: Registrar el contexto web en la base de datos de SELinux
+#    - name: Configurar contexto de SELinux para la carpeta
+#      community.general.sefcontext:
+#        target: '/webtest(/.*)?'
+#        setype: httpd_sys_content_t
+#        state: present
+#
+#    # 👇 NUEVA TAREA 2: Aplicar el cambio de SELinux en el disco duro de inmediato
+#    - name: Aplicar los cambios de SELinux a los archivos existentes
+#      ansible.builtin.command: restorecon -Rv /webtest
 
     - name: Check de url esta ok
       ansible.builtin.uri:
