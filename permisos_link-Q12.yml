@@ -1,0 +1,51 @@
+---
+- name: Pregunta 12 del video permisos y link simbolicos
+  hosts: dev
+  become: true
+
+  tasks:
+    - name: Creando directorio webtest
+      ansible.builtin.file:
+        path: "/webtest"
+        state: directory
+        owner: sally
+        group: apache
+        mode: '2775'
+        
+    - name: Creando link simbolico
+      ansible.builtin.file:
+        src: "/webtest"
+        path: "/var/www/html/webtest"
+        state: link
+    
+    - name: Creando pagina index
+      ansible.builtin.copy:
+        dest: "/webtest/index.html"
+        content: "Hola mundo de los permisos y link simbolicos"
+        owner: apache
+        group: apache
+        mode: '0644'
+        
+   # 👇 NUEVA TAREA 1: Registrar el contexto web en la base de datos de SELinux
+    - name: Configurar contexto de SELinux para la carpeta
+      community.general.sefcontext:
+        target: '/webtest(/.*)?'
+        setype: httpd_sys_content_t
+        state: present
+
+    # 👇 NUEVA TAREA 2: Aplicar el cambio de SELinux en el disco duro de inmediato
+    - name: Aplicar los cambios de SELinux a los archivos existentes
+      ansible.builtin.command: restorecon -Rv /webtest
+
+    - name: Check de url esta ok
+      ansible.builtin.uri:
+        url: "http://servera.example.com/webtest"
+        return_content: true
+        status_code:
+          - 200
+      register: webcheck
+
+    - name: Mostrando el contenido
+      ansible.builtin.debug:
+        msg: "{{ webcheck['content'] }}"
+

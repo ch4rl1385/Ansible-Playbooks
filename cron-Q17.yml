@@ -1,0 +1,13 @@
+---
+- name: Creando cron para servidores dev
+  hosts: dev
+  become: true
+
+  tasks:
+    - name: Creando tarea cron para user natasha
+      ansible.builtin.cron:
+        name: Tarea user natasha cada 2 min
+        job: logger "EX294 exam in progress"
+        user: sally
+        minute: "*/2"
+        hour: "*"

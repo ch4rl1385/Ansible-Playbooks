@@ -10,12 +10,22 @@
         key: "{{ gpg_key_url }}"
         state: present
 
-    - name: Add multiple repositories into the same file (2/2)
+    - name: Add multiple repositories into the same file 
       ansible.builtin.yum_repository:
         name: BaseOS
         description: BaseOS Description
         file: BaseOS
         baseurl: http://conten.example.com/rhel9.6/x86_64/dvd/BaseOS
+        gpgkey: "{{ gpg_key_url }}"
+        gpgcheck: true
+        enabled: true
+    
+    - name: Add repo Appstream 
+      ansible.builtin.yum_repository:
+        name: AppStream
+        description: AppStream Description
+        file: AppStream
+        baseurl: http://conten.example.com/rhel9.6/x86_64/dvd/AppStream
         gpgkey: "{{ gpg_key_url }}"
         gpgcheck: true
         enabled: true
